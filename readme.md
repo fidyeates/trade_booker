@@ -14,6 +14,10 @@ python3 bin/app.py
 
 ### Improvements and considerations
 
+Test Coverage: 87% 
+
+
+
 - ID generation is currently not very good, but that's a factor of using
 sqlite as the backend. 
 - Implementation of pagination into the list view would be useful for a production

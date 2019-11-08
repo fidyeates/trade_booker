@@ -2,6 +2,6 @@
 # Don't save database files
 *.db
 
-
+.DS_Store
 *.pyc
 *.idea
