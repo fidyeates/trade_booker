@@ -1,6 +1,3 @@
-FIXER_URI = "http://data.fixer.io/api/";
-ACCESS_KEY = "edfed567398eaeabd20a295428334ae3";
-
 
 function on_currency_changed () {
     /*
@@ -19,18 +16,26 @@ function calculate_rate(sellCurrency, buyCurrency) {
     Calls a the remote fixer.io api endpoint to get the latest rate and performs the conversion
      */
     let amount = $("#sell_amount").val();
-    let URI = "http://data.fixer.io/api/latest?access_key=" + ACCESS_KEY + "&base=" + sellCurrency + "&symbols=" + buyCurrency;
 
     // Perform an ajax get request to the currency exchange website.
+    let post_data = {
+        from: sellCurrency,
+        to: buyCurrency
+    };
     $.ajax({
-        type: "GET",
-        url: URI,
+        type: "POST",
+        url: "/rates",
+        data: JSON.stringify(post_data),
         success: function(data, status) {
-            let rate = data.rates[buyCurrency];
-            let result = rate * amount;
-            $("#rate").attr("placeholder", rate.toFixed(4));
-            $("#buy_amount").attr("placeholder", result.toFixed(2));
-            $("#submit").attr("disabled", false)
+            if (data.success) {
+                let rate = data.rate;
+                let result = rate * amount;
+                $("#rate").attr("placeholder", rate.toFixed(4));
+                $("#buy_amount").attr("placeholder", result.toFixed(2));
+                $("#submit").attr("disabled", false)
+            } else {
+                alert("Error saving - requires better error handling in the frontend")
+            }
         },
         error: function(data, status) {
             // Should have better error handling from frontend issues, propogating to a backend error handling
@@ -73,28 +78,4 @@ function submit_trade() {
 
 function cancel_booking() {
     window.location = "/";
-}
-
-
-function setup_symbols() {
-    /*
-    Gets all available symbols from fixer.io and populates the dropdowns
-     */
-    let URI = "http://data.fixer.io/api/symbols?access_key=" + ACCESS_KEY;
-    $.ajax({
-        type: "GET",
-        url: URI,
-        success: function(data, status) {
-            $.each( data.symbols, function( symbol, description ) {
-                $("#sell_currency").append(new Option(symbol, symbol));
-                $("#buy_currency").append(new Option(symbol, symbol));
-            });
-        },
-        error: function(data, status) {
-            // Should have better error handling from frontend issues, propogating to a backend error handling
-            // and logging system
-            console.log("Error:", data, status);
-        },
-        dataType: "json"
-    });
 }

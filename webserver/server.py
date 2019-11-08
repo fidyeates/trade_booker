@@ -1,6 +1,7 @@
 import tornado.ioloop
 import tornado.web
 from data_layer.schema import Trade
+from data_layer.rates import get_all_symbols, get_rate
 import json
 import sqlite3
 import os
@@ -30,8 +31,10 @@ class BookingHandler(tornado.web.RequestHandler):
 
     Supported methods: get, post
     """
+    SYMBOLS = get_all_symbols()
+
     def get(self):
-        self.render("templates/booking.html", title="Trade Booker - Booking")
+        self.render("templates/booking.html", title="Trade Booker - Booking", symbols=self.SYMBOLS)
 
     def post(self):
         raw_data = self.request.body
@@ -43,6 +46,22 @@ class BookingHandler(tornado.web.RequestHandler):
         self.write({"success": True})
 
 
+class RateHandler(tornado.web.RequestHandler):
+
+    def post(self):
+        raw_data = self.request.body
+        try:
+            data = json.loads(raw_data)
+            rate = get_rate(data["from"], data["to"])
+            payload = {
+                "success": True,
+                "rate": rate
+            }
+        except:
+            payload = {"success": False}
+        self.write(payload)
+
+
 def make_app():
     """
     Helper function to create a tornado application.
@@ -51,7 +70,8 @@ def make_app():
     return tornado.web.Application([
         (r"/", ListingsHandler),
         (r"/book", BookingHandler),
-        (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": WEBSERVER_DIRECTORY+ "/static/"},),
+        (r"/rates", RateHandler),
+        (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": WEBSERVER_DIRECTORY + "/static/"},),
     ])
 
 

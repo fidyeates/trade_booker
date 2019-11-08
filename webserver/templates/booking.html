@@ -44,6 +44,9 @@
                             </div>
                               <select class="custom-select" id="sell_currency">
                                 <option selected></option>
+                                  {% for symbol in symbols %}
+                                    <option value="{{ symbol }}">{{ symbol }}</option>
+                                  {% end %}
                               </select>
                         </div>
 
@@ -73,6 +76,9 @@
                         <div class="input-group mb-3">
                             <select class="custom-select" id="buy_currency">
                                 <option selected></option>
+                                {% for symbol in symbols %}
+                                    <option value="{{ symbol }}">{{ symbol }}</option>
+                                  {% end %}
                             </select>
                             <div class="input-group-append">
                                 <span class="input-group-text" id="basic-addon2" style="width: 90px;">Buy</span>
@@ -120,8 +126,6 @@
     $("#sell_amount").change(function() {
         on_currency_changed();
     })
-
-    setup_symbols();
 
 </script>
 </body>
