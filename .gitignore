@@ -1,0 +1,7 @@
+
+# Don't save database files
+*.db
+
+
+*.pyc
+*.idea
