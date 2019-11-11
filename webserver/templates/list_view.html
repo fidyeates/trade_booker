@@ -48,9 +48,9 @@
                     <tr>
                         <th scope="row">{{ trade.format_id() }}</th>
                         <td>{{ trade.sell_currency }}</td>
-                        <td>{{ trade.sell_amount }}</td>
+                        <td>{{ round(trade.sell_amount, 2) }}</td>
                         <td>{{ trade.buy_currency }}</td>
-                        <td>{{ trade.buy_amount }}</td>
+                        <td>{{ round(trade.buy_amount, 2) }}</td>
                         <td>{{ trade.rate }}</td>
                         <td>{{ trade.format_date() }}</td>
                     </tr>

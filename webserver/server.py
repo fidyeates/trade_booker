@@ -40,9 +40,17 @@ class BookingHandler(tornado.web.RequestHandler):
         raw_data = self.request.body
         data = json.loads(raw_data)
         data["sell_amount"] = float(data["sell_amount"])
-        data["buy_amount"] = float(data["buy_amount"])
+
+        # Recalculate the rates in the backend, don't trust what comes in from the frontend.
+        new_rate = get_rate(data["sell_currency"], data["buy_currency"])
+        data["buy_amount"] = round(new_rate * data["sell_amount"], 2)
         data["rate"] = float(data["rate"])
-        Trade(**data).save()
+        try:
+            Trade(**data).save()
+        except ValueError:
+            self.write({"success": False})
+            return
+
         self.write({"success": True})
 
 
