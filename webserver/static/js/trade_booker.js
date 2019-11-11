@@ -16,7 +16,11 @@ function calculate_rate(sellCurrency, buyCurrency) {
     Calls a the remote fixer.io api endpoint to get the latest rate and performs the conversion
      */
     let amount = $("#sell_amount").val();
-
+    if (amount <= 0) {
+        alert("Sell amount can't be less than or equal to 0");
+        $("#sell_amount").val("1.0");
+        return;
+    }
     // Perform an ajax get request to the currency exchange website.
     let post_data = {
         from: sellCurrency,

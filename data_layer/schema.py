@@ -73,8 +73,12 @@ class Trade(object):
         self.id = kwargs.get("id", None)
         self.sell_currency = validate_input(kwargs["sell_currency"], self.TYPES["sell_currency"])
         self.sell_amount = validate_input(kwargs["sell_amount"], self.TYPES["sell_amount"])
+        if self.sell_amount <= 0:
+            raise ValueError("Sell amount can't be zero!")
         self.buy_currency = validate_input(kwargs["buy_currency"], self.TYPES["buy_currency"])
         self.buy_amount = validate_input(kwargs["buy_amount"], self.TYPES["buy_amount"])
+        if self.buy_amount <= 0:
+            raise ValueError("Buy amount can't be zero!")
         self.rate = validate_input(kwargs["rate"], self.TYPES["rate"])
         self.date_booked = validate_input(kwargs.get("date_booked", time.time()), self.TYPES["date_booked"])
 
