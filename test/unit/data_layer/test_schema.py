@@ -73,6 +73,11 @@ class Test_Trade(unittest.TestCase):
         values = ["GBP", 100.0, "USD", 140.0, 1.4]
         self.assertEqual(Trade(**dict(zip(fields, values))).values(), values + [10000.0])
 
+    def test_values_method_fails_validation_1(self):
+        fields = ["sell_currency", "sell_amount", "buy_currency", "buy_amount", "rate"]
+        values = ["GBP", -100.0, "USD", -140.0, 1.4]
+        self.assertRaises(ValueError, Trade, **dict(zip(fields, values)))
+
 
 if __name__ == "__main__":
     unittest.main()
