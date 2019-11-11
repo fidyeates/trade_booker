@@ -13,7 +13,7 @@ sudo -H setup.sh
 
 ### Improvements and considerations
 
-Test Coverage: 87% 
+Test Coverage: 92% 
 
 
 
