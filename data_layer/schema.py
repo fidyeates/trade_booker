@@ -6,6 +6,7 @@ Handles functionality around database schema objects and standardised methods fo
 from data_layer.connections import get_connection
 import string
 import time
+import sqlite3
 
 CHARACTERS = string.ascii_letters + string.digits
 
@@ -142,3 +143,38 @@ TRADE_TABLE_SCHEMA = """CREATE TABLE {}
         date_booked real
     )
 """.format(Trade.TABLE_NAME)
+
+
+def setup_trade_table(connection, close_connection=False):
+    """
+    Setups the sqlite3 tables, does nothing if the table already exists
+
+    :param sqlite3.Connection connection: the connection to setup the table structure for
+    """
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute(TRADE_TABLE_SCHEMA)
+    except sqlite3.OperationalError:
+        print("Table Already Exists!")
+        return
+
+    connection.commit()
+    if close_connection:
+        connection.close()
+
+
+def delete_trade_table(connection):
+    """
+    Helper function to delete the trade table, useful for automated testing.
+
+    :param sqlite3.Connection connection: the connection to delete the table structure for
+    """
+    cursor = connection.cursor()
+    command = """DROP TABLE {};""".format(Trade.TABLE_NAME)
+    try:
+        cursor.execute(command)
+    except sqlite3.OperationalError:
+        print("Table doesn't exist")
+        return
+    connection.commit()
