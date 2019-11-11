@@ -9,7 +9,6 @@ Run:
 
 ```
 sudo -H setup.sh
-python3 bin/app.py
 ```
 
 ### Improvements and considerations
